@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+ 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/tx
+ 		http://www.springframework.org/schema/tx/spring-tx.xsd
+ 		http://www.springframework.org/schema/aop
+ 		http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/data/mongo
+          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+      
+
+       <context:component-scan base-package="com.social"/> 
+       <mvc:annotation-driven/>
+       <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="WEB-INF/jsp/"/>
+            <property name="suffix" value=".jsp"/>
+       </bean>
+
+
+       <!--<bean id="database" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+          <property name="location" value="classpath:resources/database-setting.properties"/>
+          <property name="ignoreResourceNotFound" value="true"/> 
+        </bean>
+
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+          <property name="driverClassName" value="${database.driver}"/>
+          <property name="url" value="${database.url}"/>
+          <property name="username" value="${database.user}"/>
+          <property name="password" value="${database.password}"/>
+       </bean>
+
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+          <property name="dataSource" ref="dataSource"/>
+          <property name="annotatedClasses">
+            <list>
+              <value>com.social.portal.Post</value>
+             
+            </list>
+          </property>
+          <property name="hibernateProperties">
+            <props>
+              <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+              <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+              <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+            </props>
+          </property>
+        </bean>
+
+        <bean id="socialNetworkingDao" class="com.social.portal.dao.SocialNetowrkingDaoImpl">
+              <property name="sessionFactory" ref="sessionFactory"/>
+        </bean>-->
+       <!-- Configure the Mongo Server -->
+
+     <!--<mongo:mongo id="mongo" host="localhost" port="27017"/>-->
+
+     <bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
+        <property name="host" value="localhost"/>
+     </bean>
+     
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+      <constructor-arg name="mongo" ref="mongo"/>
+      <constructor-arg name="databaseName" value="postDB"/>
+    </bean>
+
+     <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- max upload size in bytes -->
+        <property name="maxUploadSize" value="20971520" /> <!-- 20MB -->
+         
+        <!-- max size of file in memory (in bytes) -->
+        <property name="maxInMemorySize" value="1048576" /> <!-- 1MB -->
+ 
+    </bean>
+
+   <!-- <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+      <property name="useDefaultSuffixPattern" value="false" />
+   </bean>-->
+
+   <!--<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+    <property name="favorPathExtension" value="true" />
+    <property name="favorParameter" value="false"/>
+    <property name="parameterName" value="mediaType"/>
+    <property name="ignoreAcceptHeader" value="false" />
+    <property name="defaultContentType" value="application/html" />
+    <property name="useJaf" value="false" />
+ 
+    <property name="mediaTypes">
+        <map>
+            <entry key="jpg" value="IMAGE_JPEG" />
+            <entry key="xml" value="IMAGE_PNG" />
+            <entry key="xml" value="application/html"/>
+        </map>
+    </property>
+</bean>-->
+    <bean id="customUserDetailsService" class="com.social.portal.service.CustomUserDetailsService"/>
+
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+       
+     </beans>
+  
